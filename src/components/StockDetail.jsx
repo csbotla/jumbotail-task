@@ -64,13 +64,15 @@ const StockName = styled.div`
 // 08. previous close: "77.2800"
 // 09. change: "0.0000"
 // 10. change percent: "0.0000%"
-export default function StockDetail() {
+export default function StockDetail(props) {
   const { stock } = useParams();
   const [stockInfo, setStockInfo] = useState({ data: [], isFetching: false });
+  const stockData = stockInfo.data["Global Quote"];
+  const { currency } = props.location.state;
   const API_KEY = process.env.REACT_APP_API_KEY;
   const STOCK_URL = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${stock}&apikey=${API_KEY}`;
 
-  console.log("###", process.env);
+  console.log("###", process.env, currency);
   async function fetchStockData() {
     setStockInfo({ data: stockInfo.data, isFetching: true });
     const response = await fetch(STOCK_URL);
@@ -88,23 +90,17 @@ export default function StockDetail() {
 
   return (
     <StockContainer>
-      {stockInfo.data["Global Quote"] ? (
+      {stockData ? (
         <StockDetails>
           <StockName
             color={
-              stockInfo.data["Global Quote"]["02. open"] >
-              stockInfo.data["Global Quote"]["05. price"]
-                ? "red"
-                : "green"
+              stockData["02. open"] > stockData["05. price"] ? "red" : "green"
             }
           >
             <div>
               <h1>
-                {stockInfo.data["Global Quote"]["01. symbol"]}{" "}
-                {stockInfo.data["Global Quote"]["02. open"] >
-                stockInfo.data["Global Quote"]["05. price"]
-                  ? "↓"
-                  : "↑"}
+                {stockData["01. symbol"]}{" "}
+                {stockData["02. open"] > stockData["05. price"] ? "↓" : "↑"}
               </h1>
             </div>
           </StockName>
@@ -113,49 +109,35 @@ export default function StockDetail() {
             <div>
               <StockLabel>Price:</StockLabel>
               <StockData>
-                {stockInfo.data["Global Quote"]
-                  ? stockInfo.data["Global Quote"]["05. price"]
-                  : ""}
+                {stockData ? `${stockData["05. price"]} ${currency}` : ""}
               </StockData>
             </div>
             <div>
               <StockLabel>Open:</StockLabel>
               <StockData>
-                {stockInfo.data["Global Quote"]
-                  ? stockInfo.data["Global Quote"]["02. open"]
-                  : ""}
+                {stockData ? `${stockData["02. open"]} ${currency}` : ""}
               </StockData>
             </div>
             <div>
               <StockLabel>High:</StockLabel>
               <StockData>
-                {stockInfo.data["Global Quote"]
-                  ? stockInfo.data["Global Quote"]["03. high"]
-                  : ""}
+                {stockData ? `${stockData["03. high"]} ${currency}` : ""}
               </StockData>
             </div>
             <div>
               <StockLabel>Low:</StockLabel>
               <StockData>
-                {stockInfo.data["Global Quote"]
-                  ? stockInfo.data["Global Quote"]["04. low"]
-                  : ""}
+                {stockData ? `${stockData["04. low"]} ${currency}` : ""}
               </StockData>
             </div>
             <div>
               <StockLabel>Volume:</StockLabel>
-              <StockData>
-                {stockInfo.data["Global Quote"]
-                  ? stockInfo.data["Global Quote"]["06. volume"]
-                  : ""}
-              </StockData>
+              <StockData>{stockData ? stockData["06. volume"] : ""}</StockData>
             </div>
             <div>
               <StockLabel>Last Trading Date:</StockLabel>
               <StockData>
-                {stockInfo.data["Global Quote"]
-                  ? stockInfo.data["Global Quote"]["07. latest trading day"]
-                  : ""}
+                {stockData ? stockData["07. latest trading day"] : ""}
               </StockData>
             </div>
           </TradeInfo>
