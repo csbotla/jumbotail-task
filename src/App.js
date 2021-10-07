@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import styled from "styled-components";
 import Search from "./components/Search";
 import StockDetail from "./components/StockDetail";
@@ -16,12 +16,8 @@ function App() {
     <Router>
       <Container>
         <Switch>
-          <Route path="/stock/:stock" exact={true}>
-            <StockDetail />
-          </Route>
-          <Route path="/" exact={true}>
-            <Search />
-          </Route>
+          <Route path="/stock/:stock" exact={true} component={StockDetail} />
+          <Route path="/" exact={true} component={Search} />
         </Switch>
       </Container>
     </Router>
