@@ -22,13 +22,16 @@ const StockItem = styled.div`
   font-weight: 600;
 `;
 
-export default function Stock({ name }) {
+export default function Stock({ name, currency }) {
   return (
-    <StockItem>
-      <div>{name}</div>
-      <div>
-        <Link to={"/stock/" + name}>open</Link>
-      </div>
-    </StockItem>
+    <Link
+      to={{ pathname: "/stock/" + name, state: { currency } }}
+      style={{ textDecoration: "none" }}
+    >
+      <StockItem>
+        <div>{name}</div>
+        <div>↗</div>
+      </StockItem>
+    </Link>
   );
 }
